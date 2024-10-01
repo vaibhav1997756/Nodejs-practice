@@ -2,15 +2,57 @@ const http=require("http");
 const fs=require("fs");
 const url =require("url");
 const express = require('express');
+const users=require("./MOCK_DATA.json");
 
+const PORT =8000;
 
 const app=express();
+// middleware--> plugin
+app.use(express.urlencoded({extended:false}));
 
 app.get("/",(req,res)=>{
   return res.send("Hello from Home Page");
 });
+
+app.get("/api/users",(req,res)=>{
+  return res.json(users);
+});
+
+app.post("/api/users",(req,res)=>{
+  //TODO: Create ner user
+  const body=req.body;
+  console.log("Body",body);
+  return res.json({status :"pending"});
+});
+
+app.patch("/api/users/:id",(req,res)=>{
+  //TODO: Edit the user
+  return res.json({status :"pending"});
+});
+
+app.delete("/api/users/:id",(req,res)=>{
+  //TODO: Delete the user with id
+  return res.json({status :"pending"});
+});
+
+
+app.get("/api/users/:id",(req,res)=>{
+  const id=Number(req.params.id);
+  const user=users.find((user)=>user.id === id);
+
+  return res.json(user);
+});
+
+app.get("/users",(req,res)=>{
+
+const html=`<ul>${users.map(users =>`<li>${users.first_name}</li>`).join("")}</ul>`
+      return res.send(html);
+});
+
+
 app.get("/about",(req,res)=>{
-    return res.send("Hello from About Page");
+    // return res.send("Hello from About Page");
+    return res.send(`Hello, ${req.query.name}`);
   });
 
 function myHandler(req,res){
@@ -59,5 +101,5 @@ function myHandler(req,res){
 // myHandler
 // );
 const MyServer=http.createServer(app);
-MyServer.listen(8000,() =>console.log("server started"));
+MyServer.listen(PORT,() =>console.log("server started"));
 
