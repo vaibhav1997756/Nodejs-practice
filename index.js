@@ -10,19 +10,52 @@ const app=express();
 // middleware--> plugin
 app.use(express.urlencoded({extended:false}));
 
+app.use((req,res,next)=>{
+  //console.log("Hello");
+  //req.creditCardNumber='124455'
+  fs.appendFile('log.txt',`${Date.now()}:${req.method}:${req.path}\n`,(err,data)=>{
+    next(); 
+  });
+
+ // return res.json({mgs:"Hello from Middleware 1"})
+
+});
+
+
+app.use((req,res,next)=>{
+ 
+  console.log("Hello",req.myUserName);
+ // return res.json({mgs:"Hello from Middleware 1"})
+ req.myUserName="vaibhav";
+ next();
+})
+
+app.use((req,res,next)=>{
+  console.log("Hello");
+  req.creditCardNumber='124455'
+  next(); 
+ // return res.json({mgs:"Hello from Middleware 1"})
+
+});
+
 app.get("/",(req,res)=>{
   return res.send("Hello from Home Page");
 });
 
 app.get("/api/users",(req,res)=>{
+  res.setHeader("X-myName","Vaibhav Singh")
   return res.json(users);
 });
 
 app.post("/api/users",(req,res)=>{
   //TODO: Create ner user
   const body=req.body;
-  console.log("Body",body);
-  return res.json({status :"pending"});
+  users.push({...body,id:users.length+1});
+  fs.writeFile("./MOCK_DATA.json",JSON.stringify(users),(err,data)=>{
+    return res.status(201).json({status :"success",id:users.length + 1});
+  });
+  // console.log("Body",body);
+
 });
 
 app.patch("/api/users/:id",(req,res)=>{

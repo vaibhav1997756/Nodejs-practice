@@ -24,3 +24,11 @@
 1727687131211:/search?search_query=man New Req Recieved 
 1727687979172:GET / New Req Recieved 
 1727688626336:GET /signup New Req Recieved 
+1727952331270:GET:/api/users/
+1727952360728:POST:/api/users/
+1727953788369:GET:/api/users/
+1727953899741:GET:/api/users/
+1727954081058:GET:/api/users/
+1727955209226:POST:/api/users/
+1727955273625:POST:/api/users/
+1727955320796:POST:/api/users/
