@@ -3,6 +3,27 @@ const fs=require("fs");
 const url =require("url");
 const express = require('express');
 const users=require("./MOCK_DATA.json");
+const { config } = require("nodemon");
+
+const mysql=require("mysql");
+const connection=mysql.createConnection({
+  host:'localhost',
+  port:3307,
+  database:'school_management',
+  user:'root',
+
+  password:''
+});
+ 
+
+connection.connect(function (err){
+  if(err){
+    console.log('error')
+  }
+  else{
+    console.log("successfully created")
+  }
+});
 
 const PORT =8000;
 
@@ -50,6 +71,9 @@ app.get("/api/users",(req,res)=>{
 app.post("/api/users",(req,res)=>{
   //TODO: Create ner user
   const body=req.body;
+  if(!body || !body.first_name || !body.last_name || !body.email ||!body.gender){
+    return res.status(400).json({msg:"All fields are req .."})
+  }
   users.push({...body,id:users.length+1});
   fs.writeFile("./MOCK_DATA.json",JSON.stringify(users),(err,data)=>{
     return res.status(201).json({status :"success",id:users.length + 1});
@@ -71,7 +95,8 @@ app.delete("/api/users/:id",(req,res)=>{
 
 app.get("/api/users/:id",(req,res)=>{
   const id=Number(req.params.id);
-  const user=users.find((user)=>user.id === id);
+  const user=users.find((user)=>user[0].id === id);
+  if(!user)  return res.status(404).json({error:"user not found"});
 
   return res.json(user);
 });
